@@ -107,15 +107,6 @@ class PlaylistRepository {
     }
   }
 
-  /// 自动创建歌单
-  Future<void> autoCreatePlaylists({bool includeSubdirs = false}) async {
-    try {
-      await playlistApi.autoCreatePlaylists(includeSubdirs: includeSubdirs);
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
   /// 获取歌单内歌曲
   Future<SongListResponse> getPlaylistSongs(
     int id, {
@@ -183,15 +174,6 @@ class PlaylistRepository {
     try {
       final result = await playlistApi.batchDeletePlaylists(ids);
       return result['deleted'] as int? ?? 0;
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  /// 删除所有自动创建的歌单
-  Future<void> deleteAutoCreatedPlaylists() async {
-    try {
-      await playlistApi.deleteAutoCreatedPlaylists();
     } on DioException catch (e) {
       throw _handleError(e);
     }

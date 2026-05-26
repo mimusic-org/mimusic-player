@@ -407,21 +407,6 @@ class PlaylistNotifier extends Notifier<AsyncValue<void>> {
     }
   }
 
-  /// 自动创建歌单
-  Future<bool> autoCreatePlaylists({bool includeSubdirs = false}) async {
-    state = const AsyncValue.loading();
-    try {
-      await _repository.autoCreatePlaylists(includeSubdirs: includeSubdirs);
-      state = const AsyncValue.data(null);
-      // 刷新歌单列表
-      ref.invalidate(playlistListProvider);
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
-  }
-
   /// 向歌单添加歌曲
   Future<bool> addSongsToPlaylist(int playlistId, List<int> songIds) async {
     state = const AsyncValue.loading();
@@ -511,21 +496,6 @@ class PlaylistNotifier extends Notifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return 0;
-    }
-  }
-
-  /// 删除所有自动创建的歌单
-  Future<bool> deleteAutoCreatedPlaylists() async {
-    state = const AsyncValue.loading();
-    try {
-      await _repository.deleteAutoCreatedPlaylists();
-      state = const AsyncValue.data(null);
-      // 刷新歌单列表
-      ref.invalidate(playlistListProvider);
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
     }
   }
 

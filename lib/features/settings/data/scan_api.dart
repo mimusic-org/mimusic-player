@@ -6,7 +6,7 @@ import '../../../core/network/api_exceptions.dart';
 /// 扫描进度模型
 class ScanProgress {
   final String
-  status; // 'idle', 'scanning', 'importing', 'completed', 'failed', 'cancelling', 'cancelled'
+  status; // 'idle', 'scanning', 'importing', 'creating_playlists', 'completed', 'failed', 'cancelling', 'cancelled'
   final String? currentFile;
   final int totalFiles;
   final int scannedFiles;
@@ -49,9 +49,15 @@ class ScanProgress {
   /// 计算进度百分比 0-100
   int get progress => totalFiles > 0 ? (scannedFiles * 100 ~/ totalFiles) : 0;
 
-  /// 是否正在扫描（包括 scanning 和 importing 阶段）
+  /// 是否正在扫描（包括 scanning、importing、creating_playlists 阶段）
   bool get isScanning =>
-      status == 'scanning' || status == 'importing' || status == 'cancelling';
+      status == 'scanning' ||
+      status == 'importing' ||
+      status == 'creating_playlists' ||
+      status == 'cancelling';
+
+  /// 是否处于自动创建歌单阶段
+  bool get isCreatingPlaylists => status == 'creating_playlists';
 
   /// 是否完成
   bool get isCompleted => status == 'completed';

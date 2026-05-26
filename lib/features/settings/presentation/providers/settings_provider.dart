@@ -252,6 +252,52 @@ final scanProgressProvider =
 // Upgrade Progress Provider
 // ============================================================================
 
+// ============================================================================
+// Auto-Create Playlists Include Subdirs Provider
+// ============================================================================
+
+/// 「扫描后自动创建歌单是否包含子目录」配置 Notifier。
+/// 后端 key: scan_auto_create_include_subdirs，存 "true"/"false"。
+class AutoCreateIncludeSubdirsNotifier extends AsyncNotifier<bool> {
+  static const _configKey = 'scan_auto_create_include_subdirs';
+
+  @override
+  Future<bool> build() async {
+    final configApi = ref.watch(configApiProvider);
+    try {
+      final config = await configApi.getConfig(_configKey);
+      return config.value.toLowerCase() == 'true';
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// 切换并持久化
+  Future<void> setValue(bool value) async {
+    state = AsyncValue.data(value);
+    try {
+      final configApi = ref.read(configApiProvider);
+      await configApi.updateConfig(
+        key: _configKey,
+        value: value ? 'true' : 'false',
+      );
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+}
+
+/// 「扫描后自动创建歌单是否包含子目录」Provider
+final autoCreateIncludeSubdirsProvider =
+    AsyncNotifierProvider<AutoCreateIncludeSubdirsNotifier, bool>(
+      AutoCreateIncludeSubdirsNotifier.new,
+    );
+
+// ============================================================================
+// Upgrade Progress Provider
+// ============================================================================
+
 /// 升级进度 Notifier
 class UpgradeProgressNotifier extends Notifier<UpgradeProgress> {
   late UpgradeApi _upgradeApi;

@@ -127,15 +127,6 @@ class PlaylistApi {
     await dio.delete('${AppConfig.apiPrefix}/playlists/$id');
   }
 
-  /// 自动创建歌单（根据目录结构）
-  /// POST /api/v1/playlists/auto-create
-  Future<void> autoCreatePlaylists({bool includeSubdirs = false}) async {
-    await dio.post(
-      '${AppConfig.apiPrefix}/playlists/auto-create',
-      queryParameters: {'include_subdirs': includeSubdirs},
-    );
-  }
-
   /// 获取歌单内歌曲
   /// GET /api/v1/playlists/{id}/songs?limit=20&offset=0
   Future<SongListResponse> getPlaylistSongs(
@@ -199,12 +190,6 @@ class PlaylistApi {
       data: {'ids': ids},
     );
     return response.data as Map<String, dynamic>;
-  }
-
-  /// 删除所有自动创建的歌单
-  /// DELETE /api/v1/playlists/auto-created
-  Future<void> deleteAutoCreatedPlaylists() async {
-    await dio.delete('${AppConfig.apiPrefix}/playlists/auto-created');
   }
 
   /// 启动歌单的网络歌曲→本地歌曲转换

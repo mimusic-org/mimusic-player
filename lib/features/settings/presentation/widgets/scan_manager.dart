@@ -110,6 +110,10 @@ class _ScanManagerState extends ConsumerState<ScanManager> {
           const SizedBox(height: 12),
         ],
 
+        // 「自动创建歌单包含子目录」开关
+        _buildIncludeSubdirsTile(),
+        const SizedBox(height: AppSpacing.md),
+
         // 排除目录设置（可展开/折叠）
         Card(
           elevation: 0,
@@ -241,34 +245,91 @@ class _ScanManagerState extends ConsumerState<ScanManager> {
   }
 
   Widget _buildScanningState(ScanProgress progress) {
+    final isCreatingPlaylists = progress.isCreatingPlaylists;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LinearProgressIndicator(
-          value: progress.progress / 100,
+          value: isCreatingPlaylists ? null : progress.progress / 100,
           minHeight: 8,
           borderRadius: BorderRadius.circular(4),
         ),
         const SizedBox(height: 12),
-        if (progress.currentFile != null)
+        if (isCreatingPlaylists)
           Text(
-            '正在扫描: ${progress.currentFile}',
+            '正在按目录自动创建歌单...',
             style: Theme.of(context).textTheme.bodySmall,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          )
+        else ...[
+          if (progress.currentFile != null)
+            Text(
+              '正在扫描: ${progress.currentFile}',
+              style: Theme.of(context).textTheme.bodySmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          const SizedBox(height: 4),
+          Text(
+            '已处理: ${progress.scannedFiles}/${progress.totalFiles}, 导入: ${progress.importedFiles}, 跳过: ${progress.skippedFiles}, 失败: ${progress.failedFiles}',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
-        const SizedBox(height: 4),
-        Text(
-          '已处理: ${progress.scannedFiles}/${progress.totalFiles}, 导入: ${progress.importedFiles}, 跳过: ${progress.skippedFiles}, 失败: ${progress.failedFiles}',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        ],
         const SizedBox(height: 12),
         OutlinedButton.icon(
-          onPressed: _cancelScan,
+          onPressed: isCreatingPlaylists ? null : _cancelScan,
           icon: const Icon(Icons.cancel),
           label: const Text('取消扫描'),
         ),
       ],
+    );
+  }
+
+  /// 「自动创建歌单包含子目录」开关
+  Widget _buildIncludeSubdirsTile() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final asyncValue = ref.watch(autoCreateIncludeSubdirsProvider);
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        side: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      child: SwitchListTile(
+        secondary: Icon(
+          Icons.account_tree_outlined,
+          color: colorScheme.onSurfaceVariant,
+        ),
+        title: const Text('自动创建歌单包含子目录'),
+        subtitle: Text(
+          asyncValue.when(
+            data: (_) => '开启后子目录歌曲也会加入到祖先目录歌单',
+            loading: () => '加载中...',
+            error: (_, __) => '读取配置失败',
+          ),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        value: asyncValue.value ?? false,
+        onChanged: asyncValue.isLoading
+            ? null
+            : (value) async {
+                try {
+                  await ref
+                      .read(autoCreateIncludeSubdirsProvider.notifier)
+                      .setValue(value);
+                } catch (e) {
+                  if (mounted) {
+                    ResponsiveSnackBar.showError(
+                      context,
+                      message: '保存失败: $e',
+                    );
+                  }
+                }
+              },
+      ),
     );
   }
 
