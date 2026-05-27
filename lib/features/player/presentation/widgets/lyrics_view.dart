@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -148,40 +147,31 @@ class _LyricsViewState extends State<LyricsView> {
     try {
       // UrlHelper 自动处理：相对路径拼 baseUrl + access_token，外链原样返回
       final fullUrl = UrlHelper.buildLyricUrl(lyricUrl);
-      final response = await Dio().get(fullUrl);
+      // 后端 /api/v1/songs/{id}/lyric 直接返回 LyricPayload:
+      //   {"lyric":"...","tlyric":"...","rlyric":"...","lxlyric":"..."}
+      final response = await Dio().get<Map<String, dynamic>>(fullUrl);
 
       if (!mounted) return;
 
-      // 解析返回的 JSON：{"code": 0, "data": {"lyric": "歌词文本"}}
-      final data = response.data;
-      final Map<String, dynamic> jsonData;
-      if (data is String) {
-        jsonData = json.decode(data) as Map<String, dynamic>;
-      } else {
-        jsonData = data as Map<String, dynamic>;
+      final body = response.data;
+      String lyricText = '';
+      if (body is Map<String, dynamic>) {
+        final main = body['lyric'];
+        if (main is String) {
+          lyricText = main;
+        }
       }
 
-      final code = jsonData['code'] as int?;
-      if (code == 0 && jsonData['data'] != null) {
-        final lyricText =
-            (jsonData['data'] as Map<String, dynamic>)['lyric'] as String?;
-        _fetchedLyricText = lyricText;
-        _lastFetchedUrl = lyricUrl;
-        setState(() {
-          _isLoadingFromUrl = false;
-          _loadFailed = false;
-        });
-        _parseLyrics(lyricText);
+      _fetchedLyricText = lyricText;
+      _lastFetchedUrl = lyricUrl;
+      setState(() {
+        _isLoadingFromUrl = false;
+        _loadFailed = false;
+      });
+      _parseLyrics(lyricText);
 
-        // 3. 加载成功后写入本地缓存
-        if (lyricText != null && lyricText.isNotEmpty) {
-          await LyricCacheService().put(lyricUrl, lyricText);
-        }
-      } else {
-        setState(() {
-          _isLoadingFromUrl = false;
-          _loadFailed = true;
-        });
+      if (lyricText.isNotEmpty) {
+        await LyricCacheService().put(lyricUrl, lyricText);
       }
     } catch (e) {
       debugPrint('[LyricsView] Failed to load lyric from URL: $e');
