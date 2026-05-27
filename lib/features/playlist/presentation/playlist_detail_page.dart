@@ -384,53 +384,38 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
     AsyncValue<PaginatedSongsState> songsAsync,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isWide = context.isWideScreen;
-
-    // 提取封面主色用于渐变遮罩
-    final coverUrl = playlist.coverUrl;
-    final paletteAsync = ref.watch(coverColorsProvider(coverUrl));
-    final palette = paletteAsync.value;
 
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
-        // 顶部大图
+        // 顶栏：使用主题色，不受封面影响
         SliverAppBar(
-          expandedHeight: isWide ? 300 : 250,
           pinned: true,
-          // 根据封面亮度动态设置前景色，确保按钮在任何封面上都清晰可见
-          foregroundColor: palette?.onImageColor ?? Colors.white,
-          // 返回按钮
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
+          title: Text(playlist.name),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             tooltip: '返回',
             onPressed: () {
-              // 安全返回：检查是否有可弹出的路由
               if (context.canPop()) {
                 context.pop();
               } else {
-                // 没有返回栈时，跳转到歌单列表页
                 context.go('/playlists');
               }
             },
-          ),
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              playlist.name,
-              style: TextStyle(
-                color: palette?.onImageColor ?? Colors.white,
-                shadows: const [Shadow(blurRadius: 4, color: Colors.black54)],
-              ),
-            ),
-            background: _buildHeaderBackground(context, playlist, palette),
           ),
           actions: _buildAppBarActions(
             context,
             playlist,
             songsAsync,
             colorScheme,
-            palette,
           ),
+        ),
+
+        // 封面 header 区域（独立于顶栏）
+        SliverToBoxAdapter(
+          child: _buildCoverHeader(context, playlist),
         ),
 
         // 歌单信息
@@ -516,73 +501,66 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
     return const SizedBox.shrink();
   }
 
-  Widget _buildHeaderBackground(
-    BuildContext context,
-    Playlist playlist,
-    CoverPalette? palette,
-  ) {
-    final coverUrl = playlist.coverUrl;
+  /// 构建封面 header 区域（位于顶栏下方，不会覆盖顶栏）
+  Widget _buildCoverHeader(BuildContext context, Playlist playlist) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isWide = context.isWideScreen;
+    final coverUrl = playlist.coverUrl;
+    final paletteAsync = ref.watch(coverColorsProvider(coverUrl));
+    final palette = paletteAsync.value;
 
-    // 渐变遮罩 - 使用封面主色调，fallback 到黑色
-    final overlayColor = palette?.darkMutedColor ?? Colors.black;
+    final coverSize = isWide ? 180.0 : 140.0;
+    final bgColor = palette?.darkMutedColor ?? colorScheme.surfaceContainerHighest;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // 背景图
-        if (coverUrl != null)
-          CachedNetworkImage(
-            imageUrl: UrlHelper.buildCoverUrl(coverUrl),
-            fit: BoxFit.cover,
-            placeholder:
-                (context, url) =>
-                    Container(color: colorScheme.surfaceContainerHighest),
-            errorWidget:
-                (context, url, error) => Container(
-                  color: colorScheme.surfaceContainerHighest,
-                  child: Icon(
-                    Icons.queue_music,
-                    size: 64,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                  ),
-                ),
-          )
-        else
-          Container(
-            color: colorScheme.surfaceContainerHighest,
-            child: Center(
-              child: Icon(
-                playlist.type == 'radio' ? Icons.radio : Icons.queue_music,
-                size: 64,
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-              ),
-            ),
-          ),
-        // 渐变遮罩 - 使用封面主色调
-        Container(
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            bgColor.withValues(alpha: 0.6),
+            colorScheme.surface,
+          ],
+        ),
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: isWide ? AppSpacing.lg : AppSpacing.md,
+      ),
+      child: Center(
+        child: Container(
+          width: coverSize,
+          height: coverSize,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                overlayColor.withValues(alpha: 0.3),
-                overlayColor.withValues(alpha: 0.85),
-              ],
-            ),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            boxShadow: AppShadows.medium,
           ),
+          clipBehavior: Clip.antiAlias,
+          child: coverUrl != null
+              ? CachedNetworkImage(
+                  imageUrl: UrlHelper.buildCoverUrl(coverUrl),
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      Container(color: colorScheme.surfaceContainerHighest),
+                  errorWidget: (context, url, error) =>
+                      _buildCoverPlaceholder(colorScheme, playlist),
+                )
+              : _buildCoverPlaceholder(colorScheme, playlist),
         ),
-        // 顶部渐变遮罩 - 为 AppBar 按钮区域提供额外对比度
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.center,
-              colors: [Color.fromRGBO(0, 0, 0, 0.3), Colors.transparent],
-            ),
-          ),
+      ),
+    );
+  }
+
+  Widget _buildCoverPlaceholder(ColorScheme colorScheme, Playlist playlist) {
+    return Container(
+      color: colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: Icon(
+          playlist.type == 'radio' ? Icons.radio : Icons.queue_music,
+          size: 64,
+          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
         ),
-      ],
+      ),
     );
   }
 
@@ -706,31 +684,26 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
     );
   }
 
-  /// 构建 AppBar 操作按钮
+  /// 构建 AppBar 操作按钮（使用主题色，不依赖封面调色板）
   List<Widget> _buildAppBarActions(
     BuildContext context,
     Playlist playlist,
     AsyncValue<PaginatedSongsState> songsAsync,
     ColorScheme colorScheme,
-    CoverPalette? palette,
   ) {
     final songs = songsAsync.value?.items ?? [];
     final totalSongs = songsAsync.value?.total ?? songs.length;
     final isBuiltIn = playlist.isBuiltIn;
-    // 适配封面的按钮前景色
-    final btnColor = palette?.onImageColor ?? Colors.white;
 
     // 排序模式
     if (_isSortMode) {
       return [
         TextButton(
           onPressed: _cancelSortMode,
-          style: TextButton.styleFrom(foregroundColor: btnColor),
           child: const Text('取消'),
         ),
         TextButton(
           onPressed: _exitSortMode,
-          style: TextButton.styleFrom(foregroundColor: btnColor),
           child: const Text('完成'),
         ),
       ];
@@ -741,7 +714,6 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
       return [
         TextButton(
           onPressed: () async {
-            // 全选前确保全部歌曲已加载
             await ref
                 .read(playlistSongsProvider(_playlistIdInt).notifier)
                 .loadAll();
@@ -751,7 +723,6 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                 songs;
             _toggleSelectAll(fullSongs);
           },
-          style: TextButton.styleFrom(foregroundColor: btnColor),
           child: Text(_selectedSongIds.length == totalSongs ? '取消全选' : '全选'),
         ),
         TextButton(
@@ -759,13 +730,12 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
               _selectedSongIds.isEmpty ? null : _batchRemoveSelectedSongs,
           style: TextButton.styleFrom(
             foregroundColor:
-                _selectedSongIds.isEmpty ? btnColor : colorScheme.error,
+                _selectedSongIds.isEmpty ? null : colorScheme.error,
           ),
           child: Text('删除(${_selectedSongIds.length})'),
         ),
         TextButton(
           onPressed: _exitSelectMode,
-          style: TextButton.styleFrom(foregroundColor: btnColor),
           child: const Text('取消'),
         ),
       ];
@@ -773,7 +743,6 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
 
     // 正常模式
     return [
-      // 排序按钮（歌曲数 > 1 时显示）
       if (totalSongs > 1)
         PopupMenuButton<String>(
           icon: const Icon(Icons.sort),
@@ -834,20 +803,17 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                 ),
               ],
         ),
-      // 多选按钮（有歌曲时显示）
       if (songs.isNotEmpty)
         IconButton(
           icon: const Icon(Icons.checklist),
           tooltip: '多选',
           onPressed: _enterSelectMode,
         ),
-      // 编辑按钮
       IconButton(
         icon: const Icon(Icons.edit),
         tooltip: isBuiltIn ? '修改封面' : '编辑歌单',
         onPressed: () => _showEditDialog(playlist),
       ),
-      // 更多操作
       PopupMenuButton<String>(
         icon: const Icon(Icons.more_vert),
         onSelected: (value) {
@@ -874,7 +840,6 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-              // 转换为本地歌曲（仅普通歌单显示）
               if (playlist.type != 'radio')
                 const PopupMenuItem(
                   value: 'convert_to_local',
@@ -885,7 +850,6 @@ class _PlaylistDetailPageState extends ConsumerState<PlaylistDetailPage> {
                     contentPadding: EdgeInsets.zero,
                   ),
                 ),
-              // 删除歌单（非内置歌单时显示）
               if (!isBuiltIn)
                 PopupMenuItem(
                   value: 'delete',

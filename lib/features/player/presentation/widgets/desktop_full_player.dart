@@ -161,6 +161,27 @@ class _DesktopFullPlayerState extends ConsumerState<DesktopFullPlayer>
               ),
             ),
           ),
+          // 顶部渐变遮罩 — 保证顶部按钮在任何封面色下可见
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 100,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.35),
+                      Colors.black.withValues(alpha: 0.0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
           // 主内容
           SafeArea(
             child: Padding(
@@ -268,7 +289,7 @@ class _DesktopFullPlayerState extends ConsumerState<DesktopFullPlayer>
 
   /// 顶部栏：返回按钮 + "正在播放" + 右侧占位
   Widget _buildTopBar(BuildContext context, PlayerNotifier notifier) {
-    final theme = Theme.of(context);
+    const topBarColor = Colors.white;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -281,12 +302,14 @@ class _DesktopFullPlayerState extends ConsumerState<DesktopFullPlayer>
           },
           icon: const Icon(Icons.keyboard_arrow_down_rounded),
           iconSize: 32,
+          color: topBarColor,
         ),
         // 中间标题
         Text(
           '正在播放',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          style: TextStyle(
+            color: topBarColor.withValues(alpha: 0.9),
+            fontSize: 14,
           ),
         ),
         // 占位，保持布局对称
