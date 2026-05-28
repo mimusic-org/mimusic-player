@@ -184,6 +184,8 @@ scripts/
 
 🔗 **服务端 GitHub**: [https://github.com/mimusic-org/mimusic](https://github.com/mimusic-org/mimusic)
 
-## 许可证
+## 许可证 / 第三方组件
 
-[Apache-2.0 license](LICENSE)
+本项目基于 [Apache-2.0 license](LICENSE) 开源。
+
+> **LGPL 合规提示**：本客户端在 Windows / Linux 上通过 `just_audio_media_kit` 调用 libmpv（LGPL-2.1+）作为音频后端。Windows 端打包的是 **audio-only LGPL 构建**（不含 GPL 编码器如 libx264 / libx265），Linux 端动态链接系统的 libmpv。完整的第三方组件清单、许可证类型与源码获取途径见 [NOTICE](NOTICE)。

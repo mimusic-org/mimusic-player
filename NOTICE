@@ -1,0 +1,92 @@
+MiMusic Flutter Client
+Copyright 2026 MiMusic Team
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+================================================================================
+THIRD-PARTY COMPONENTS
+================================================================================
+
+This product is built with Flutter / Dart and depends on a number of
+pub.dev packages distributed under MIT / BSD / Apache-2.0. See
+`pubspec.yaml` and `pubspec.lock` for the complete list. The notable
+ones requiring explicit notice are listed below.
+
+--------------------------------------------------------------------------------
+1. libmpv  (used on Windows and Linux via just_audio_media_kit → media_kit)
+--------------------------------------------------------------------------------
+License: GNU Lesser General Public License v2.1 or later (LGPL-2.1+)
+Upstream: https://github.com/mpv-player/mpv
+
+This product uses libmpv as the audio playback backend on Windows and
+Linux. On Windows, libmpv is bundled via the `media_kit_libs_windows_audio`
+package, which ships an **audio-only** build of libmpv linked against an
+LGPL build of FFmpeg (GPL-only encoders such as libx264 / libx265 are
+NOT included). On Linux, libmpv is loaded dynamically from the system
+package (e.g. `libmpv2` on Debian/Ubuntu).
+
+LGPL section 4 compliance:
+- libmpv is linked dynamically; users can replace the bundled DLL/SO with
+  their own LGPL-compatible build.
+- Source code for libmpv is available at the upstream URL above.
+- Source code for the audio-only build can be obtained from:
+  https://github.com/media-kit/libmpv-windows-audio-build
+  https://github.com/media-kit/libmpv-android-audio-build
+
+--------------------------------------------------------------------------------
+2. FFmpeg  (bundled with libmpv on Windows)
+--------------------------------------------------------------------------------
+License: GNU Lesser General Public License v2.1 or later (LGPL-2.1+)
+Upstream: https://ffmpeg.org
+
+The FFmpeg build bundled inside the audio-only libmpv DLL on Windows is
+configured with `--disable-gpl`, so this distribution does NOT include
+any GPL-only FFmpeg components. Source: same media-kit build repos
+listed above.
+
+--------------------------------------------------------------------------------
+3. just_audio / just_audio_media_kit
+--------------------------------------------------------------------------------
+License: MIT (just_audio), Apache-2.0 (just_audio_media_kit)
+Upstream: https://github.com/ryanheise/just_audio
+          https://github.com/Pato05/just_audio_media_kit
+
+--------------------------------------------------------------------------------
+4. media_kit / media_kit_libs_windows_audio
+--------------------------------------------------------------------------------
+License: MIT (Dart wrapper), LGPL-2.1+ (bundled native binaries)
+Upstream: https://github.com/media-kit/media-kit
+
+--------------------------------------------------------------------------------
+5. Other pub.dev packages
+--------------------------------------------------------------------------------
+The following packages are bundled and distributed under their own
+permissive licenses (MIT / BSD / Apache-2.0). See `pubspec.lock` and
+each package's pub.dev page for full text.
+
+  - flutter_riverpod, riverpod_annotation, riverpod_generator
+  - go_router
+  - dio
+  - audio_service, audio_session
+  - permission_handler
+  - shared_preferences, path_provider
+  - cached_network_image, palette_generator
+  - file_picker
+  - intl, url_launcher, flutter_markdown
+  - flutter_inappwebview
+  - json_annotation, json_serializable
+  - volume_controller
+
+================================================================================
+TRADEMARK NOTICE
+================================================================================
+
+All product names, trademarks, and registered trademarks mentioned in
+this client (including but not limited to "Flutter", "Dart", "Android",
+"iOS", "macOS", "Windows", "Linux") are property of their respective
+owners. Their use is for identification and interoperability purposes
+only and does not imply endorsement, sponsorship, or affiliation.
