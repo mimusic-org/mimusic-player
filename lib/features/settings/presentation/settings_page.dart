@@ -568,16 +568,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     showAboutDialog(
       context: context,
-      applicationName: 'MiMusic',
+      applicationName: 'Songloft',
       applicationVersion: version,
       applicationIcon: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Image.asset('assets/icons/app_icon.png', width: 48, height: 48),
       ),
-      applicationLegalese: '© 2024-2026 MiMusic. All rights reserved.',
+      applicationLegalese: '© 2024-2026 Songloft. All rights reserved.',
       children: [
         const SizedBox(height: 16),
-        const Text('MiMusic 是一个开源的个人音乐服务器应用。'),
+        const Text('Songloft 是一个开源的个人音乐服务器应用。'),
         const SizedBox(height: 8),
         const Text('支持本地音乐库管理、在线播放和插件扩展。'),
         if (gitCommit != null) ...[
@@ -589,7 +589,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         ],
         const SizedBox(height: 16),
         InkWell(
-          onTap: () => _launchUrl('https://github.com/mimusic-org/mimusic'),
+          onTap: () => _launchUrl('https://github.com/songloft-org/songloft'),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -600,7 +600,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
               const SizedBox(width: 8),
               Text(
-                'GitHub: mimusic-org/mimusic',
+                'GitHub: songloft-org/songloft',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   decoration: TextDecoration.underline,

@@ -166,7 +166,7 @@ class AdaptiveScaffold extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'MiMusic',
+                        'Songloft',
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -285,7 +285,7 @@ class AdaptiveScaffold extends StatelessWidget {
                   Icon(Icons.music_note, size: 40, color: colorScheme.primary),
                   const SizedBox(width: 16),
                   Text(
-                    'MiMusic',
+                    'Songloft',
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: TvTheme.fontSizeTitle,

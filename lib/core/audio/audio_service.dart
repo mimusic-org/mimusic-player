@@ -12,9 +12,9 @@ import 'package:just_audio/just_audio.dart' as ja;
 import '../../shared/models/song.dart';
 import '../utils/url_helper.dart';
 
-/// MiMusic 音频处理器 - 集成 audio_service 实现通知栏控制
+/// Songloft 音频处理器 - 集成 audio_service 实现通知栏控制
 /// 严格遵循 audio_service 官方示例模式：使用 .pipe() 绑定 playbackState
-class MiMusicAudioHandler extends BaseAudioHandler with SeekHandler {
+class SongloftAudioHandler extends BaseAudioHandler with SeekHandler {
   final ja.AudioPlayer _player = ja.AudioPlayer();
 
   /// 通知栏回调（由 PlayerNotifier 设置）
@@ -25,7 +25,7 @@ class MiMusicAudioHandler extends BaseAudioHandler with SeekHandler {
   /// 初始化 Future，用于确保初始化完成
   late final Future<void> _initFuture;
 
-  MiMusicAudioHandler() {
+  SongloftAudioHandler() {
     // ★ 关键：使用官方示例的 pipe 模式直接绑定 playbackState
     // 这比手动 listen + add 更可靠，直接管道连接，无中间状态丢失
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
@@ -62,7 +62,7 @@ class MiMusicAudioHandler extends BaseAudioHandler with SeekHandler {
     // 异步初始化 AudioSession（不影响核心功能）
     _initFuture = _initAudioSession();
 
-    debugPrint('[AudioService] MiMusicAudioHandler 初始化完成');
+    debugPrint('[AudioService] SongloftAudioHandler 初始化完成');
   }
 
   /// 确保初始化完成
@@ -191,20 +191,20 @@ class MiMusicAudioHandler extends BaseAudioHandler with SeekHandler {
     await _initFuture;
 
     debugPrint(
-      '[Player] MiMusicAudioHandler.playSong: ${song.title} (type: ${song.type})',
+      '[Player] SongloftAudioHandler.playSong: ${song.title} (type: ${song.type})',
     );
     try {
       ja.AudioSource source;
 
       if (song.url == null || song.url!.isEmpty) {
-        debugPrint('[Player] MiMusicAudioHandler: no valid source for song');
+        debugPrint('[Player] SongloftAudioHandler: no valid source for song');
         throw Exception('无法播放：歌曲没有有效的播放源');
       }
 
       // 原生平台无法携带 Authorization Header,UrlHelper 会自动拼接 baseUrl + access_token
       final songUrl = UrlHelper.buildSongUrl(song.url!);
 
-      debugPrint('[Player] MiMusicAudioHandler: song url: $songUrl');
+      debugPrint('[Player] SongloftAudioHandler: song url: $songUrl');
       // Web 平台使用 AudioSource.uri,其他平台使用 LockCachingAudioSource 实现边播边缓存
       if (kIsWeb) {
         source = ja.AudioSource.uri(Uri.parse(songUrl));
@@ -229,19 +229,19 @@ class MiMusicAudioHandler extends BaseAudioHandler with SeekHandler {
         await _player.stop();
       }
 
-      debugPrint('[Player] MiMusicAudioHandler: setting audio source');
+      debugPrint('[Player] SongloftAudioHandler: setting audio source');
       await _player.setAudioSource(source);
 
-      debugPrint('[Player] MiMusicAudioHandler: starting playback');
+      debugPrint('[Player] SongloftAudioHandler: starting playback');
       // 注意：just_audio 的 play() Future 在播放停止时才完成，不能 await，否则会阻塞调用链
       // 使用 fire-and-forget 模式，播放状态通过 playbackEventStream.pipe() 自动同步
       unawaited(_player.play());
       debugPrint(
-        '[Player] MiMusicAudioHandler: playback triggered (non-blocking)',
+        '[Player] SongloftAudioHandler: playback triggered (non-blocking)',
       );
       // 不再需要手动调用 _broadcastState()，pipe() 会自动同步
     } catch (e) {
-      debugPrint('[Player] MiMusicAudioHandler.playSong error: $e');
+      debugPrint('[Player] SongloftAudioHandler.playSong error: $e');
       rethrow;
     }
   }

@@ -547,7 +547,7 @@ class _UpgradeDialogState extends ConsumerState<UpgradeDialog> {
   Future<void> _launchReleaseUrl() async {
     final releaseUrl =
         _checkResult?.releaseUrl ??
-        'https://github.com/mimusic-org/mimusic/releases/latest';
+        'https://github.com/songloft-org/songloft/releases/latest';
     final url = Uri.parse(releaseUrl);
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);

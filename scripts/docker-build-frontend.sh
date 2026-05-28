@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# MiMusic Flutter 前端 Docker 构建脚本
+# Songloft Flutter 前端 Docker 构建脚本
 # 用法（从 frontend 目录或项目根目录运行）：
 #   ./scripts/docker-build-frontend.sh              # 构建所有平台
 #   ./scripts/docker-build-frontend.sh android       # 仅构建 Android
@@ -18,11 +18,11 @@ echo "前端目录: ${FRONTEND_DIR}"
 # 构建镜像（构建上下文为 frontend 根目录）
 docker build \
     --build-arg BUILD_PLATFORM="${BUILD_PLATFORM}" \
-    -t mimusic-frontend-builder \
+    -t songloft-frontend-builder \
     "$FRONTEND_DIR"
 
 # 复制产物到本地
-docker create --name tmp-frontend mimusic-frontend-builder
+docker create --name tmp-frontend songloft-frontend-builder
 docker cp tmp-frontend:/output/ "${FRONTEND_DIR}/frontend-build/"
 docker rm tmp-frontend
 

@@ -1,8 +1,8 @@
-display_name: MiMusic
-package_name: mimusic
+display_name: Songloft
+package_name: songloft
 maintainer:
-  name: MiMusic Team
-  email: dev@mimusic.org
+  name: Songloft Team
+  email: dev@songloft.org
 priority: optional
 section: sound
 installed_size: 102400

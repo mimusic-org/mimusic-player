@@ -1,5 +1,5 @@
-name: mimusic_flutter
-description: MiMusic - 跨平台音乐播放器
+name: songloft_flutter
+description: Songloft - 跨平台音乐播放器
 publish_to: 'none'
 version: 1.1.2+1
 license: Apache-2.0

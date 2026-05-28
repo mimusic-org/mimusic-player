@@ -76,7 +76,7 @@ class UpgradeCheck {
     required this.isDocker,
     this.currentVersion,
     this.availableUpdates = const [],
-    this.releaseUrl = 'https://github.com/mimusic-org/mimusic/releases/latest',
+    this.releaseUrl = 'https://github.com/songloft-org/songloft/releases/latest',
   });
 
   factory UpgradeCheck.fromJson(Map<String, dynamic> json) {

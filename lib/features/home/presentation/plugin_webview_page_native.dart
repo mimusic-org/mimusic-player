@@ -28,7 +28,7 @@ class _PluginWebViewPageState extends State<PluginWebViewPage> {
   String? _errorMessage;
 
   /// 构建 token 注入脚本
-  /// 将 access token 写入 localStorage['mimusic-auth']，
+  /// 将 access token 写入 localStorage['songloft-auth']，
   /// 格式与旧 Vue 前端一致，插件 JS 的 getAuthToken() 可直接读取
   String _buildTokenInjectionScript() {
     final token = SecureStorageService.cachedAccessToken ?? '';
@@ -38,7 +38,7 @@ class _PluginWebViewPageState extends State<PluginWebViewPage> {
         .replaceAll('\\', '\\\\')
         .replaceAll("'", "\\'")
         .replaceAll('"', '\\"');
-    return "localStorage.setItem('mimusic-auth', JSON.stringify({accessToken: '$escapedToken'}));";
+    return "localStorage.setItem('songloft-auth', JSON.stringify({accessToken: '$escapedToken'}));";
   }
 
   @override

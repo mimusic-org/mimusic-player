@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.mimusic" "\0"
-            VALUE "FileDescription", "mimusic_flutter" "\0"
+            VALUE "CompanyName", "com.songloft" "\0"
+            VALUE "FileDescription", "songloft_flutter" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mimusic_flutter" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.mimusic. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mimusic_flutter.exe" "\0"
-            VALUE "ProductName", "mimusic_flutter" "\0"
+            VALUE "InternalName", "songloft_flutter" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.songloft. All rights reserved." "\0"
+            VALUE "OriginalFilename", "songloft_flutter.exe" "\0"
+            VALUE "ProductName", "songloft_flutter" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

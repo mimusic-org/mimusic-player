@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# MiMusic Flutter 前端构建脚本
+# Songloft Flutter 前端构建脚本
 # 用法：./scripts/build-frontend.sh <platform> [output_dir]
 # 平台：web | web-embedded | linux | windows | macos | android | ios | all
 #
 # 示例：
 #   ./scripts/build-frontend.sh web
-#   ./scripts/build-frontend.sh linux /tmp/mimusic-build
+#   ./scripts/build-frontend.sh linux /tmp/songloft-build
 #   ./scripts/build-frontend.sh all ./frontend-build
 
 set -e
@@ -25,7 +25,7 @@ PROJECT_ROOT="$(dirname "$FRONTEND_DIR")"
 
 # 参数解析
 PLATFORM="${1:-}"
-OUTPUT_DIR="${2:-$(dirname "$FRONTEND_DIR")/mimusic-player-build}"
+OUTPUT_DIR="${2:-$(dirname "$FRONTEND_DIR")/songloft-player-build}"
 case "$OUTPUT_DIR" in
     /*) ;;
     *) OUTPUT_DIR="$(pwd)/$OUTPUT_DIR" ;;
@@ -33,7 +33,7 @@ esac
 
 # 帮助信息
 show_help() {
-    echo -e "${BLUE}MiMusic Flutter 前端构建工具${NC}"
+    echo -e "${BLUE}Songloft Flutter 前端构建工具${NC}"
     echo ""
     echo "用法：$0 <platform> [output_dir]"
     echo ""
@@ -52,7 +52,7 @@ show_help() {
     echo ""
     echo "示例："
     echo "  $0 web"
-    echo "  $0 linux /tmp/mimusic-build"
+    echo "  $0 linux /tmp/songloft-build"
     echo "  $0 all ./frontend-build"
 }
 
@@ -85,7 +85,7 @@ check_fastforge() {
 # 准备构建环境
 prepare() {
     echo -e "${BLUE}========================================${NC}"
-    echo -e "${BLUE}MiMusic Flutter 前端构建工具${NC}"
+    echo -e "${BLUE}Songloft Flutter 前端构建工具${NC}"
     echo -e "${BLUE}========================================${NC}"
     echo ""
     echo -e "${BLUE}构建平台:${NC} $PLATFORM"
@@ -259,7 +259,7 @@ build_windows() {
     echo -e "${BLUE}[Windows]${NC} 构建绿色便携 ZIP 包..."
     if [ -d "build/windows/x64/runner/Release" ]; then
         cd build/windows/x64/runner/Release
-        if zip -r "$output/mimusic-windows-portable.zip" . 2>&1 | tee -a "$log_file"; then
+        if zip -r "$output/songloft-windows-portable.zip" . 2>&1 | tee -a "$log_file"; then
             echo -e "${GREEN}✓ [Windows]${NC} 绿色便携 ZIP 包构建完成"
         else
             echo -e "${YELLOW}⚠ [Windows]${NC} ZIP 包构建失败，跳过"
@@ -409,10 +409,10 @@ build_ios() {
         mkdir -p "$ipa_temp/Payload"
         cp -r build/ios/iphoneos/Runner.app "$ipa_temp/Payload/"
         cd "$ipa_temp"
-        zip -r -y "$output/mimusic-ios-nosign.ipa" Payload 2>&1 | tee -a "$log_file"
+        zip -r -y "$output/songloft-ios-nosign.ipa" Payload 2>&1 | tee -a "$log_file"
         cd "$FRONTEND_DIR"
         rm -rf "$ipa_temp"
-        echo -e "${GREEN}✓ [iOS]${NC} IPA 打包完成 → $output/mimusic-ios-nosign.ipa"
+        echo -e "${GREEN}✓ [iOS]${NC} IPA 打包完成 → $output/songloft-ios-nosign.ipa"
     else
         echo -e "${YELLOW}⚠ [iOS]${NC} 未找到 Runner.app，跳过 IPA 打包"
     fi

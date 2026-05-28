@@ -1,48 +1,48 @@
-# MiMusic Flutter
+# Songloft Flutter
 
-[![Build and Release](https://github.com/mimusic-org/mimusic-player/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/mimusic-org/mimusic-player/actions/workflows/build-and-release.yml)
-[![GitHub License](https://img.shields.io/github/license/mimusic-org/mimusic-player)](https://github.com/mimusic-org/mimusic-player)
-[![GitHub Release](https://img.shields.io/github/v/release/mimusic-org/mimusic-player)](https://github.com/mimusic-org/mimusic-player/releases)
-[![Stars](https://img.shields.io/github/stars/mimusic-org/mimusic-player)](https://github.com/mimusic-org/mimusic-player/stargazers)
+[![Build and Release](https://github.com/songloft-org/songloft-player/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/songloft-org/songloft-player/actions/workflows/build-and-release.yml)
+[![GitHub License](https://img.shields.io/github/license/songloft-org/songloft-player)](https://github.com/songloft-org/songloft-player)
+[![GitHub Release](https://img.shields.io/github/v/release/songloft-org/songloft-player)](https://github.com/songloft-org/songloft-player/releases)
+[![Stars](https://img.shields.io/github/stars/songloft-org/songloft-player)](https://github.com/songloft-org/songloft-player/stargazers)
 
 <p align="center">
-  <strong>🎵 MiMusic 跨平台音乐播放器 — 基于 Flutter 构建</strong>
+  <strong>🎵 Songloft 跨平台音乐播放器 — 基于 Flutter 构建</strong>
 </p>
 
-MiMusic 跨平台音乐播放器，基于 Flutter 构建，支持 iOS、Android、macOS、Windows、Linux、Web 六端。
+Songloft 跨平台音乐播放器，基于 Flutter 构建，支持 iOS、Android、macOS、Windows、Linux、Web 六端。
 
 <p align="center">
-  <a href="https://github.com/mimusic-org/mimusic-player">🏠 GitHub</a> •
-  <a href="https://github.com/mimusic-org/mimusic-player/releases">📥 下载</a> •
-  <a href="https://github.com/mimusic-org/mimusic-player/issues">💬 问题反馈</a>
+  <a href="https://github.com/songloft-org/songloft-player">🏠 GitHub</a> •
+  <a href="https://github.com/songloft-org/songloft-player/releases">📥 下载</a> •
+  <a href="https://github.com/songloft-org/songloft-player/issues">💬 问题反馈</a>
 </p>
 
 ## 截图
 
-https://github.com/mimusic-org/mimusic/issues/6
+https://github.com/songloft-org/songloft/issues/6
 
 ## 下载安装
 
-从 [GitHub Releases](https://github.com/mimusic-org/mimusic-player/releases/latest) 下载最新版本：
+从 [GitHub Releases](https://github.com/songloft-org/songloft-player/releases/latest) 下载最新版本：
 
 | 平台 | 下载链接 | 说明 |
 |------|----------|------|
-| 🌐 **Web (standalone)** | [mimusic-web-standalone.tar.gz](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-web-standalone.tar.gz) | 独立部署版，支持配置后端地址 |
-| 🌐 **Web (embedded)** | [mimusic-web-embedded.tar.gz](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-web-embedded.tar.gz) | 嵌入 Go 后端同域部署 |
-| 🐧 **Linux** | [mimusic-linux-x64.tar.gz](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-linux-x64.tar.gz) | x64 桌面版 |
-| | [mimusic-linux-x64.deb](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-linux-x64.deb) | Debian/Ubuntu x64 |
-| | [mimusic-linux-x64.rpm](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-linux-x64.rpm) | Fedora/RHEL/CentOS x64 |
-| | [mimusic-linux-x64.AppImage](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-linux-x64.AppImage) | 免安装可执行文件 |
-| 🪟 **Windows** | [mimusic-windows-x64.zip](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-windows-x64.zip) | x64 便携版 |
-| | [mimusic-windows-x64.msix](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-windows-x64.msix) | x64 安装版 |
-| 🍎 **macOS** | [mimusic-macos.dmg](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-macos.dmg) | Universal DMG (Intel/Apple Silicon) |
-| | [mimusic-macos.zip](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-macos.zip) | Universal App 压缩包 |
-| 🤖 **Android** | [mimusic-arm64-v8a.apk](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-arm64-v8a.apk) | ARM64 设备（推荐） |
-| | [mimusic-armeabi-v7a.apk](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-armeabi-v7a.apk) | ARMv7 设备 |
-| | [mimusic-x86_64.apk](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-x86_64.apk) | x86_64 模拟器/设备 |
-| 📱 **iOS** | [mimusic-ios-nosign.ipa](https://github.com/mimusic-org/mimusic-player/releases/latest/download/mimusic-ios-nosign.ipa) | 未签名 IPA，可通过 AltStore/Sideloadly 安装 |
+| 🌐 **Web (standalone)** | [songloft-web-standalone.tar.gz](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-web-standalone.tar.gz) | 独立部署版，支持配置后端地址 |
+| 🌐 **Web (embedded)** | [songloft-web-embedded.tar.gz](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-web-embedded.tar.gz) | 嵌入 Go 后端同域部署 |
+| 🐧 **Linux** | [songloft-linux-x64.tar.gz](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-linux-x64.tar.gz) | x64 桌面版 |
+| | [songloft-linux-x64.deb](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-linux-x64.deb) | Debian/Ubuntu x64 |
+| | [songloft-linux-x64.rpm](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-linux-x64.rpm) | Fedora/RHEL/CentOS x64 |
+| | [songloft-linux-x64.AppImage](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-linux-x64.AppImage) | 免安装可执行文件 |
+| 🪟 **Windows** | [songloft-windows-x64.zip](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-windows-x64.zip) | x64 便携版 |
+| | [songloft-windows-x64.msix](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-windows-x64.msix) | x64 安装版 |
+| 🍎 **macOS** | [songloft-macos.dmg](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-macos.dmg) | Universal DMG (Intel/Apple Silicon) |
+| | [songloft-macos.zip](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-macos.zip) | Universal App 压缩包 |
+| 🤖 **Android** | [songloft-arm64-v8a.apk](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-arm64-v8a.apk) | ARM64 设备（推荐） |
+| | [songloft-armeabi-v7a.apk](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-armeabi-v7a.apk) | ARMv7 设备 |
+| | [songloft-x86_64.apk](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-x86_64.apk) | x86_64 模拟器/设备 |
+| 📱 **iOS** | [songloft-ios-nosign.ipa](https://github.com/songloft-org/songloft-player/releases/latest/download/songloft-ios-nosign.ipa) | 未签名 IPA，可通过 AltStore/Sideloadly 安装 |
 
-> 开发版可在 [main 分支 Release](https://github.com/mimusic-org/mimusic-player/releases/tag/main) 获取。
+> 开发版可在 [main 分支 Release](https://github.com/songloft-org/songloft-player/releases/tag/main) 获取。
 
 ## 功能特性
 
@@ -178,11 +178,11 @@ scripts/
 
 ## 后端
 
-需要配合 [MiMusic 后端](https://github.com/mimusic-org/mimusic) 服务运行。默认连接 `http://localhost:58091`，可在登录页中修改 API 地址。
+需要配合 [Songloft 后端](https://github.com/songloft-org/songloft) 服务运行。默认连接 `http://localhost:58091`，可在登录页中修改 API 地址。
 
 默认账号：admin / admin
 
-🔗 **服务端 GitHub**: [https://github.com/mimusic-org/mimusic](https://github.com/mimusic-org/mimusic)
+🔗 **服务端 GitHub**: [https://github.com/songloft-org/songloft](https://github.com/songloft-org/songloft)
 
 ## 许可证 / 第三方组件
 

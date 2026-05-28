@@ -18,7 +18,7 @@ import 'core/router/app_router.dart';
 import 'features/settings/presentation/providers/settings_provider.dart';
 
 /// 全局 AudioHandler Provider
-final audioHandlerProvider = Provider<MiMusicAudioHandler>((ref) {
+final audioHandlerProvider = Provider<SongloftAudioHandler>((ref) {
   throw UnimplementedError('audioHandlerProvider must be overridden');
 });
 
@@ -79,17 +79,17 @@ void main() async {
   );
 
   // 初始化 audio_service（带降级保护）
-  MiMusicAudioHandler audioHandler;
+  SongloftAudioHandler audioHandler;
   try {
     debugPrint('[Main] 🚀 开始初始化 AudioService...');
     debugPrint('[Main] AudioServiceConfig:');
-    debugPrint('[Main]   - channelId: com.mimusic.playback');
-    debugPrint('[Main]   - channelName: MiMusic 播放控制');
+    debugPrint('[Main]   - channelId: com.songloft.playback');
+    debugPrint('[Main]   - channelName: Songloft 播放控制');
 
-    audioHandler = await AudioService.init<MiMusicAudioHandler>(
+    audioHandler = await AudioService.init<SongloftAudioHandler>(
       builder: () {
-        debugPrint('[Main] 调用 MiMusicAudioHandler builder...');
-        return MiMusicAudioHandler();
+        debugPrint('[Main] 调用 SongloftAudioHandler builder...');
+        return SongloftAudioHandler();
       },
       // androidStopForegroundOnPause 设为 false 保持前台服务持续运行：
       // HyperOS3 等系统在前台服务停止后会激进回收资源，
@@ -97,8 +97,8 @@ void main() async {
       // 注意：audio_service 要求 androidStopForegroundOnPause=false 时
       // androidNotificationOngoing 也必须为 false
       config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.mimusic.playback',
-        androidNotificationChannelName: 'MiMusic 播放控制',
+        androidNotificationChannelId: 'com.songloft.playback',
+        androidNotificationChannelName: 'Songloft 播放控制',
         androidNotificationOngoing: false,
         androidStopForegroundOnPause: false,
       ),
@@ -113,7 +113,7 @@ void main() async {
     debugPrint('[Main] ❌ AudioService.init 失败: $e');
     debugPrint('[Main] Stack trace: $stackTrace');
     debugPrint('[Main] ⚠️ 使用降级 handler (通知栏功能将不可用)');
-    audioHandler = MiMusicAudioHandler();
+    audioHandler = SongloftAudioHandler();
     await audioHandler.ensureInitialized();
   }
 
@@ -123,7 +123,7 @@ void main() async {
         // 将 audioHandler 注入到 Riverpod 中
         audioHandlerProvider.overrideWithValue(audioHandler),
       ],
-      child: const MiMusicApp(),
+      child: const SongloftApp(),
     ),
   );
 }
@@ -139,8 +139,8 @@ class _AppScrollBehavior extends MaterialScrollBehavior {
   };
 }
 
-class MiMusicApp extends ConsumerWidget {
-  const MiMusicApp({super.key});
+class SongloftApp extends ConsumerWidget {
+  const SongloftApp({super.key});
 
   /// 根据屏幕宽度获取 ScreenType
   ScreenType _getScreenType(double width) {
@@ -155,7 +155,7 @@ class MiMusicApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
-      title: 'MiMusic',
+      title: 'Songloft',
       debugShowCheckedModeBanner: false,
       scrollBehavior: _AppScrollBehavior(),
       theme: AppTheme.lightTheme(),

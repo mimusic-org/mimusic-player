@@ -1,4 +1,4 @@
-display_name: MiMusic客户端
+display_name: Songloft客户端
 msix_version: 1.0.0.0
 store: "true"
 logo_path: web/icons/Icon-512.png
@@ -8,4 +8,4 @@ languages: zh-cn, en-us
 # 以下字段需要与 Microsoft Store 仪表板中注册的信息匹配
 publisher: CN=C6C6ACD3-DAF2-47DB-B6A8-800945835CEF
 publisher_display_name: 涵曦
-identity_name: BA26D70F.MiMusic
+identity_name: BA26D70F.Songloft

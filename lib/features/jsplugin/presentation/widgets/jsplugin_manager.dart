@@ -134,7 +134,7 @@ class _JSPluginManagerState extends ConsumerState<JSPluginManager> {
     );
   }
 
-  static const _pluginDownloadUrl = 'https://mimusic.hanxi.cc/issues/4.html';
+  static const _pluginDownloadUrl = 'https://songloft.hanxi.cc/issues/4.html';
 
   Future<void> _openPluginDownloadPage() async {
     final uri = Uri.parse(_pluginDownloadUrl);

@@ -1,4 +1,4 @@
-package com.mimusic.mimusic_flutter
+package com.songloft.songloft_flutter
 
 import android.media.AudioManager
 import android.os.Bundle

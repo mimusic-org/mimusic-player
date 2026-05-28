@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.mimusic.mimusic_flutter"
+    namespace = "com.songloft.songloft_flutter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -54,15 +54,15 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.mimusic.mimusic_flutter"
+        applicationId = "com.songloft.songloft_flutter"
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // 显式设置为 23 以支持 Android 6.0+ 的旧版 TV 设备（如小米 4A）
         // Flutter 3.29 默认值为 24，这里降低以兼容更多设备
         // Android Automotive 建议 API 28+，但非强制
         // 注意：不能直接写 minSdk = 23，Flutter 迁移工具会自动将 16-23 的值替换为 flutter.minSdkVersion
         @Suppress("PropertyName")
-        val MIMUSIC_MIN_SDK = 23
-        minSdk = MIMUSIC_MIN_SDK
+        val SONGLOFT_MIN_SDK = 23
+        minSdk = SONGLOFT_MIN_SDK
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

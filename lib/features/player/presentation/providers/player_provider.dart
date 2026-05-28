@@ -27,7 +27,7 @@ final playerStateProvider = NotifierProvider<PlayerNotifier, PlayerState>(
 
 /// 播放器状态管理 Notifier
 class PlayerNotifier extends Notifier<PlayerState> {
-  late MiMusicAudioHandler _audioHandler;
+  late SongloftAudioHandler _audioHandler;
   late SecureStorageService _secureStorage;
 
   StreamSubscription<Duration>? _positionSubscription;

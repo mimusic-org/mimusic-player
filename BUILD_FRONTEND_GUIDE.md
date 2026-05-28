@@ -1,8 +1,8 @@
-# MiMusic Flutter 前端构建指南
+# Songloft Flutter 前端构建指南
 
 ## 📦 概述
 
-`build-frontend.sh` 用于构建 MiMusic Flutter 前端，支持按平台单独构建或并行构建所有平台。
+`build-frontend.sh` 用于构建 Songloft Flutter 前端，支持按平台单独构建或并行构建所有平台。
 
 ### 支持的平台
 
@@ -25,7 +25,7 @@ make build-frontend PLATFORM=linux
 make build-frontend PLATFORM=android
 
 # 构建到自定义目录
-make build-frontend PLATFORM=web OUTPUT_DIR=/tmp/mimusic-player-build
+make build-frontend PLATFORM=web OUTPUT_DIR=/tmp/songloft-player-build
 
 # 构建当前系统支持的所有平台
 make build-frontend-all
@@ -43,15 +43,15 @@ make build-frontend-ios        # iOS（仅 macOS）
 
 ```bash
 # 构建单个平台
-./mimusic-player/scripts/build-frontend.sh web
-./mimusic-player/scripts/build-frontend.sh linux
-./mimusic-player/scripts/build-frontend.sh android
+./songloft-player/scripts/build-frontend.sh web
+./songloft-player/scripts/build-frontend.sh linux
+./songloft-player/scripts/build-frontend.sh android
 
 # 指定输出目录
-./mimusic-player/scripts/build-frontend.sh web /tmp/mimusic-player-build
+./songloft-player/scripts/build-frontend.sh web /tmp/songloft-player-build
 
 # 构建所有平台（自动跳过不支持的平台）
-./mimusic-player/scripts/build-frontend.sh all
+./songloft-player/scripts/build-frontend.sh all
 ```
 
 ## ⚡ 并行构建特性
@@ -78,7 +78,7 @@ make build-frontend-ios        # iOS（仅 macOS）
 ## 📁 输出结构
 
 ```
-mimusic-player-build/
+songloft-player-build/
 ├── .build_logs/          # 构建日志目录
 │   ├── web.log
 │   ├── linux.log
@@ -103,10 +103,10 @@ mimusic-player-build/
 
 ```bash
 # 查看 Web 构建日志
-cat mimusic-player-build/.build_logs/web.log
+cat songloft-player-build/.build_logs/web.log
 
 # 查看所有日志
-ls -la mimusic-player-build/.build_logs/
+ls -la songloft-player-build/.build_logs/
 ```
 
 ## ❌ 错误处理
@@ -121,7 +121,7 @@ ls -la mimusic-player-build/.build_logs/
 # 检查是否有平台失败
 if [ $? -ne 0 ]; then
     echo "构建失败，查看日志："
-    ls mimusic-player-build/.build_logs/*.log
+    ls songloft-player-build/.build_logs/*.log
 fi
 ```
 
@@ -162,33 +162,33 @@ jobs:
         with:
           flutter-version: '3.29.0'
       - name: Build
-        run: ./mimusic-player/scripts/build-frontend.sh ${{ matrix.platform }} ${{ runner.temp }}/mimusic-player-build
+        run: ./songloft-player/scripts/build-frontend.sh ${{ matrix.platform }} ${{ runner.temp }}/songloft-player-build
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-${{ matrix.platform }}
-          path: ${{ runner.temp }}/mimusic-player-build/
+          name: songloft-${{ matrix.platform }}
+          path: ${{ runner.temp }}/songloft-player-build/
 ```
 
 ### 2. Docker 构建（Web + Linux + Android）
 
 ```bash
 # 默认构建所有 Linux 容器支持的平台（Web + Linux + Android）
-docker build -t mimusic-frontend-builder mimusic-player/
+docker build -t songloft-frontend-builder songloft-player/
 
 # 仅构建 Web
-docker build --build-arg BUILD_PLATFORM=web -t mimusic-frontend-builder mimusic-player/
+docker build --build-arg BUILD_PLATFORM=web -t songloft-frontend-builder songloft-player/
 
 # 仅构建 Android
-docker build --build-arg BUILD_PLATFORM=android -t mimusic-frontend-builder mimusic-player/
+docker build --build-arg BUILD_PLATFORM=android -t songloft-frontend-builder songloft-player/
 
 # 提取产物到本地
-docker create --name tmp-frontend mimusic-frontend-builder
-docker cp tmp-frontend:/output/ ./mimusic-player-build/
+docker create --name tmp-frontend songloft-frontend-builder
+docker cp tmp-frontend:/output/ ./songloft-player-build/
 docker rm tmp-frontend
 
 # 或使用便捷脚本（支持指定平台参数）
-./mimusic-player/scripts/docker-build-frontend.sh              # 构建所有平台
-./mimusic-player/scripts/docker-build-frontend.sh android      # 仅构建 Android
+./songloft-player/scripts/docker-build-frontend.sh              # 构建所有平台
+./songloft-player/scripts/docker-build-frontend.sh android      # 仅构建 Android
 ```
 
 ## 🛠️ 环境要求
@@ -232,7 +232,7 @@ sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev
 查看对应日志文件：
 
 ```bash
-tail -f mimusic-player-build/.build_logs/<platform>.log
+tail -f songloft-player-build/.build_logs/<platform>.log
 ```
 
 ### 问题 2: 内存不足
@@ -250,7 +250,7 @@ Flutter 构建比较消耗内存，建议：
 sdkmanager --licenses
 
 # 清理 Gradle 缓存
-cd mimusic-player
+cd songloft-player
 flutter clean
 rm -rf android/.gradle
 ```
@@ -259,7 +259,7 @@ rm -rf android/.gradle
 
 ```bash
 # 清理 Pod
-cd mimusic-player/ios
+cd songloft-player/ios
 pod deintegrate
 pod install
 
@@ -279,18 +279,18 @@ flutter pub get
 
 ```
 ========================================
-MiMusic Flutter 前端全平台并行构建工具
+Songloft Flutter 前端全平台并行构建工具
 ========================================
 
-输出目录：/Users/hanxi/toy/mimusic/mimusic-player-build
-前端目录：/Users/hanxi/toy/mimusic/mimusic-player
+输出目录：/Users/hanxi/toy/songloft/songloft-player-build
+前端目录：/Users/hanxi/toy/songloft/songloft-player
 CPU 核心数：8 (用于控制并发)
 
 Flutter 版本:
 Flutter 3.29.0 • channel stable
 
 [准备阶段] 清理并创建输出目录...
-✓ 输出目录已准备：/Users/hanxi/toy/mimusic/frontend-build
+✓ 输出目录已准备：/Users/hanxi/toy/songloft/frontend-build
 
 [准备阶段] 安装 Flutter 依赖...
 ✓ 依赖安装完成
@@ -335,7 +335,7 @@ Flutter 3.29.0 • channel stable
   Android:             180MB
   iOS:                 320MB
 
-构建报告已保存至：mimusic-player-build/BUILD_REPORT.md
+构建报告已保存至：songloft-player-build/BUILD_REPORT.md
 ```
 
 ## 📞 支持

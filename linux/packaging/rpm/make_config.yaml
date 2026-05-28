@@ -1,12 +1,12 @@
-display_name: MiMusic
+display_name: Songloft
 icon: assets/icons/app_icon.png
 summary: Self-hosted music server with cross-platform client
 group: Applications/Multimedia
-vendor: MiMusic
-packager: MiMusic Team
-packagerEmail: dev@mimusic.org
+vendor: Songloft
+packager: Songloft Team
+packagerEmail: dev@songloft.org
 license: MIT
-url: https://github.com/mimusic-org/mimusic
+url: https://github.com/songloft-org/songloft
 keywords:
   - Music
   - Player

@@ -1,6 +1,6 @@
 # Flutter 前端版本发布指南
 
-本目录包含 MiMusic Flutter 前端的版本发布脚本和最佳实践。
+本目录包含 Songloft Flutter 前端的版本发布脚本和最佳实践。
 
 ## 📋 版本发布脚本
 
@@ -8,7 +8,7 @@
 
 用于自动化 Flutter 前端的版本发布流程。
 
-**位置**: `mimusic-player/scripts/release-frontend.sh`
+**位置**: `songloft-player/scripts/release-frontend.sh`
 
 **用法**:
 
@@ -64,7 +64,7 @@
 ### 1. 发布新版本
 
 ```bash
-cd mimusic-player
+cd songloft-player
 
 # 选择合适的版本升级类型
 ./scripts/release-frontend.sh patch  # 或 minor / major
@@ -79,7 +79,7 @@ cd mimusic-player
 
 ### 3. 创建 GitHub Release
 
-访问 https://github.com/mimusic-org/mimusic-player/releases/new
+访问 https://github.com/songloft-org/songloft-player/releases/new
 
 - Tag version: 选择刚创建的 tag (如 `v1.0.1`)
 - Release title: `v1.0.1`
@@ -87,20 +87,20 @@ cd mimusic-player
 
 ### 4. 上传构建产物
 
-将 `mimusic-player-build/` 目录下的各平台构建产物上传到 Release。
+将 `songloft-player-build/` 目录下的各平台构建产物上传到 Release。
 
 ## 📦 构建产物说明
 
 | 文件 | 说明 |
 |------|------|
-| `mimusic-web-standalone.tar.gz` | Web 独立部署版 |
-| `mimusic-web-embedded.tar.gz` | Web 嵌入版（用于 Go 后端） |
-| `mimusic-linux-x64/` | Linux 桌面版 |
-| `mimusic-linux-amd64.deb` | Debian/Ubuntu 安装包 |
-| `mimusic-windows-x64.zip` | Windows 便携版 |
-| `mimusic-macos.dmg` | macOS DMG |
-| `mimusic-arm64-v8a.apk` | Android APK (ARM64) |
-| `mimusic-ios-nosign.ipa` | iOS IPA (无签名) |
+| `songloft-web-standalone.tar.gz` | Web 独立部署版 |
+| `songloft-web-embedded.tar.gz` | Web 嵌入版（用于 Go 后端） |
+| `songloft-linux-x64/` | Linux 桌面版 |
+| `songloft-linux-amd64.deb` | Debian/Ubuntu 安装包 |
+| `songloft-windows-x64.zip` | Windows 便携版 |
+| `songloft-macos.dmg` | macOS DMG |
+| `songloft-arm64-v8a.apk` | Android APK (ARM64) |
+| `songloft-ios-nosign.ipa` | iOS IPA (无签名) |
 
 ## 🔄 与后端版本发布的区别
 
@@ -163,5 +163,5 @@ version: 1.0.0+1  # 正确格式
 ## 📚 相关文档
 
 - [构建脚本使用指南](./BUILD_FRONTEND_GUIDE.md)
-- [MiMusic 后端发布流程](../scripts/release.sh)
+- [Songloft 后端发布流程](../scripts/release.sh)
 - [Flutter 版本管理](https://flutter.dev/docs/development/tools/pubspec)

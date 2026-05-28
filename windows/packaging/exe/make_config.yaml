@@ -1,7 +1,7 @@
 app_id: B5599538-42B1-4826-A479-AF079F21A65D
-publisher: MiMusic
-publisher_url: https://github.com/mimusic-org/mimusic
-display_name: MiMusic
+publisher: Songloft
+publisher_url: https://github.com/songloft-org/songloft
+display_name: Songloft
 create_desktop_icon: true
 locales:
   - en

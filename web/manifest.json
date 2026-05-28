@@ -1,6 +1,6 @@
 {
-    "name": "MiMusic",
-    "short_name": "MiMusic",
+    "name": "Songloft",
+    "short_name": "Songloft",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

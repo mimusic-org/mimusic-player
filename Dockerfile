@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
-# MiMusic Flutter 前端构建镜像
+# Songloft Flutter 前端构建镜像
 # 用法：
-#   cd mimusic  # 项目根目录
-#   docker build -t mimusic-frontend-builder frontend/
-#   docker build --build-arg BUILD_PLATFORM=android -t mimusic-frontend-builder frontend/
-#   docker build --build-arg BUILD_PLATFORM=web -t mimusic-frontend-builder frontend/
+#   cd songloft  # 项目根目录
+#   docker build -t songloft-frontend-builder frontend/
+#   docker build --build-arg BUILD_PLATFORM=android -t songloft-frontend-builder frontend/
+#   docker build --build-arg BUILD_PLATFORM=web -t songloft-frontend-builder frontend/
 #
 # 提取构建产物到本地：
-#   docker create --name tmp-frontend mimusic-frontend-builder
+#   docker create --name tmp-frontend songloft-frontend-builder
 #   docker cp tmp-frontend:/output/ ./frontend-build/
 #   docker rm tmp-frontend
 #
@@ -82,4 +82,4 @@ WORKDIR /output
 
 COPY --from=builder /app/frontend-build/ /output/
 
-CMD ["sh", "-c", "echo '=== MiMusic Frontend Build Output ===' && ls -la /output/ && echo '' && echo 'Use: docker cp <container>:/output/ ./frontend-build/'"]
+CMD ["sh", "-c", "echo '=== Songloft Frontend Build Output ===' && ls -la /output/ && echo '' && echo 'Use: docker cp <container>:/output/ ./frontend-build/'"]

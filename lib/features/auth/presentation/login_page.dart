@@ -283,7 +283,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       height: TvTheme.spacingSmall,
                                     ),
                                     Text(
-                                      '使用您的账号登录 MiMusic',
+                                      '使用您的账号登录 Songloft',
                                       style: TvTheme.captionStyle(context),
                                     ),
                                   ],
@@ -368,7 +368,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                             // 底部提示
                             Text(
-                              '© ${DateTime.now().year} MiMusic',
+                              '© ${DateTime.now().year} Songloft',
                               textAlign: TextAlign.center,
                               style: TvTheme.captionStyle(context),
                             ),
@@ -414,7 +414,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
         const SizedBox(height: 40),
         Text(
-          'MiMusic',
+          'Songloft',
           style: theme.textTheme.displayMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -615,7 +615,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
         const SizedBox(height: 24),
         Text(
-          'MiMusic',
+          'Songloft',
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -724,7 +724,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget _buildFooter(ThemeData theme) {
     return Text(
-      '© ${DateTime.now().year} MiMusic',
+      '© ${DateTime.now().year} Songloft',
       textAlign: TextAlign.center,
       style: theme.textTheme.bodySmall?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,

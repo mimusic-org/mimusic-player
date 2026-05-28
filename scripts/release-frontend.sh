@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# MiMusic Flutter 前端版本发布脚本
+# Songloft Flutter 前端版本发布脚本
 # 用法：./scripts/release-frontend.sh [major|minor|patch]
 # 示例：./scripts/release-frontend.sh patch  # 1.0.0 -> 1.0.1
 
@@ -23,7 +23,7 @@ PUBSPEC_FILE="$FRONTEND_DIR/pubspec.yaml"
 
 # 帮助信息
 show_help() {
-    echo -e "${BLUE}MiMusic Flutter 前端版本发布工具${NC}"
+    echo -e "${BLUE}Songloft Flutter 前端版本发布工具${NC}"
     echo ""
     echo "用法:"
     echo "  $0 [major|minor|patch]"
@@ -218,7 +218,7 @@ main() {
     local bump_type=${1:-patch}
 
     echo -e "${BLUE}========================================${NC}"
-    echo -e "${BLUE}MiMusic Flutter 前端版本发布工具${NC}"
+    echo -e "${BLUE}Songloft Flutter 前端版本发布工具${NC}"
     echo -e "${BLUE}========================================${NC}"
     echo ""
 
@@ -277,7 +277,7 @@ main() {
     echo ""
     echo -e "${BLUE}新版本:${NC} $new_version"
     echo -e "${BLUE}Git Tag:${NC} v$new_version"
-    echo -e "${BLUE}Release URL:${NC} https://github.com/mimusic-org/frontend/releases/tag/v$new_version"
+    echo -e "${BLUE}Release URL:${NC} https://github.com/songloft-org/songloft-player/releases/tag/v$new_version"
     echo ""
 }
 

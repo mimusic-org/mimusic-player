@@ -70,11 +70,11 @@ jobs:
       - name: Package
         run: |
           cd build/web
-          tar czf "$GITHUB_WORKSPACE/mimusic-web-${{ matrix.mode }}.tar.gz" .
+          tar czf "$GITHUB_WORKSPACE/songloft-web-${{ matrix.mode }}.tar.gz" .
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-web-${{ matrix.mode }}
-          path: mimusic-web-${{ matrix.mode }}.tar.gz
+          name: songloft-web-${{ matrix.mode }}
+          path: songloft-web-${{ matrix.mode }}.tar.gz
 
   build-linux:
     name: Linux (x64)
@@ -118,14 +118,14 @@ jobs:
       - name: Package tar.gz (基础便携包)
         run: |
           cd build/linux/x64/release/bundle
-          tar czf "$GITHUB_WORKSPACE/mimusic-linux-x64.tar.gz" .
+          tar czf "$GITHUB_WORKSPACE/songloft-linux-x64.tar.gz" .
       - name: Build DEB package
         continue-on-error: true
         run: |
           fastforge package --platform linux --targets deb
           DEB_FILE=$(find dist -maxdepth 2 -name "*.deb" -print -quit 2>/dev/null)
           if [ -n "$DEB_FILE" ]; then
-            cp "$DEB_FILE" ./mimusic-linux-x64.deb
+            cp "$DEB_FILE" ./songloft-linux-x64.deb
           fi
       - name: Build RPM package
         continue-on-error: true
@@ -133,7 +133,7 @@ jobs:
           fastforge package --platform linux --targets rpm
           RPM_FILE=$(find dist -maxdepth 2 -name "*.rpm" -print -quit 2>/dev/null)
           if [ -n "$RPM_FILE" ]; then
-            cp "$RPM_FILE" ./mimusic-linux-x64.rpm
+            cp "$RPM_FILE" ./songloft-linux-x64.rpm
           fi
       - name: Build AppImage
         continue-on-error: true
@@ -141,16 +141,16 @@ jobs:
           fastforge package --platform linux --targets appimage
           APPIMAGE_FILE=$(find dist -maxdepth 2 -name "*.AppImage" -print -quit 2>/dev/null)
           if [ -n "$APPIMAGE_FILE" ]; then
-            cp "$APPIMAGE_FILE" ./mimusic-linux-x64.AppImage
+            cp "$APPIMAGE_FILE" ./songloft-linux-x64.AppImage
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-linux-x64
+          name: songloft-linux-x64
           path: |
-            mimusic-linux-x64.tar.gz
-            mimusic-linux-x64.deb
-            mimusic-linux-x64.rpm
-            mimusic-linux-x64.AppImage
+            songloft-linux-x64.tar.gz
+            songloft-linux-x64.deb
+            songloft-linux-x64.rpm
+            songloft-linux-x64.AppImage
 
   build-windows:
     name: Windows (x64)
@@ -180,7 +180,7 @@ jobs:
       - name: Package ZIP (绿色便携包)
         shell: pwsh
         run: |
-          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath mimusic-windows-x64.zip
+          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath songloft-windows-x64.zip
       - name: Build MSIX package
         continue-on-error: true
         shell: pwsh
@@ -188,14 +188,14 @@ jobs:
           fastforge package --platform windows --targets msix
           $msixFile = Get-ChildItem -Path "dist" -Recurse -Filter "*.msix" -ErrorAction SilentlyContinue | Select-Object -First 1
           if ($msixFile) {
-            Copy-Item $msixFile.FullName -Destination mimusic-windows-x64.msix
+            Copy-Item $msixFile.FullName -Destination songloft-windows-x64.msix
           }
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-windows-x64
+          name: songloft-windows-x64
           path: |
-            mimusic-windows-x64.zip
-            mimusic-windows-x64.msix
+            songloft-windows-x64.zip
+            songloft-windows-x64.msix
 
   build-macos:
     name: macOS (Universal)
@@ -224,21 +224,21 @@ jobs:
       - name: Package ZIP (.app)
         run: |
           cd build/macos/Build/Products/Release
-          zip -r -y "$GITHUB_WORKSPACE/mimusic-macos.zip" *.app
+          zip -r -y "$GITHUB_WORKSPACE/songloft-macos.zip" *.app
       - name: Build DMG
         continue-on-error: true
         run: |
           fastforge package --platform macos --targets dmg
           DMG_FILE=$(find dist -maxdepth 2 -name "*.dmg" -print -quit 2>/dev/null)
           if [ -n "$DMG_FILE" ]; then
-            cp "$DMG_FILE" ./mimusic-macos.dmg
+            cp "$DMG_FILE" ./songloft-macos.dmg
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-macos
+          name: songloft-macos
           path: |
-            mimusic-macos.zip
-            mimusic-macos.dmg
+            songloft-macos.zip
+            songloft-macos.dmg
 
   build-android:
     name: Android (APK)
@@ -278,12 +278,12 @@ jobs:
       - name: Collect APKs
         run: |
           mkdir -p apk-output
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk apk-output/mimusic-arm64-v8a.apk
-          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk apk-output/mimusic-armeabi-v7a.apk
-          cp build/app/outputs/flutter-apk/app-x86_64-release.apk apk-output/mimusic-x86_64.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk apk-output/songloft-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk apk-output/songloft-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk apk-output/songloft-x86_64.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-android-apk
+          name: songloft-android-apk
           path: apk-output/*.apk
 
   build-ios:
@@ -308,12 +308,12 @@ jobs:
         run: |
           mkdir -p Payload
           cp -r build/ios/iphoneos/Runner.app Payload/
-          zip -r -y mimusic-ios-nosign.ipa Payload
+          zip -r -y songloft-ios-nosign.ipa Payload
           rm -rf Payload
       - uses: actions/upload-artifact@v4
         with:
-          name: mimusic-ios
-          path: mimusic-ios-nosign.ipa
+          name: songloft-ios
+          path: songloft-ios-nosign.ipa
 
   # ============================================================
   # 发布 Release
