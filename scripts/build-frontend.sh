@@ -4,8 +4,13 @@
 # 用法：./scripts/build-frontend.sh <platform> [output_dir]
 # 平台：web | web-embedded | linux | windows | macos | android | ios | all
 #
+# 环境变量：
+#   DEBUG=1   构建 Web 时输出 source map（main.dart.js.map），方便
+#             在 Chrome DevTools 反混淆压缩堆栈，仅本地调试用，会显著增大产物体积
+#
 # 示例：
 #   ./scripts/build-frontend.sh web
+#   DEBUG=1 ./scripts/build-frontend.sh web-embedded   # 调试用：带 source map
 #   ./scripts/build-frontend.sh linux /tmp/songloft-build
 #   ./scripts/build-frontend.sh all ./frontend-build
 
@@ -50,8 +55,12 @@ show_help() {
     echo "可选参数："
     echo "  output_dir     输出目录（默认：\$(pwd)/frontend-build）"
     echo ""
+    echo "环境变量："
+    echo "  DEBUG=1        Web 构建附带 source map（用于调试反混淆，体积大幅增加）"
+    echo ""
     echo "示例："
     echo "  $0 web"
+    echo "  DEBUG=1 $0 web-embedded"
     echo "  $0 linux /tmp/songloft-build"
     echo "  $0 all ./frontend-build"
 }
@@ -142,13 +151,20 @@ build_web() {
         fi
     fi
 
+    # DEBUG=1 时启用 source map，便于在 Chrome DevTools 反混淆压缩堆栈（仅本地调试用，会显著增大产物体积）
+    local debug_args=""
+    if [ "${DEBUG:-}" = "1" ] || [ "${DEBUG:-}" = "true" ]; then
+        debug_args="--source-maps"
+        echo -e "${YELLOW}⚠ [Web]${NC} DEBUG 模式：启用 source map（产物体积会显著增大，请勿用于发布）"
+    fi
+
     # 构建命令按模式区分是否使用 --no-web-resources-cdn：
     # embedded 模式：使用本地引擎资源（--no-web-resources-cdn），canvaskit 路径由构建标志写入 flutter_build_config
     # standalone 模式：不传此标志，flutter_build_config 会配置从 CDN 加载引擎资源
     if [ "$mode" = "embedded" ]; then
-        flutter build web --release --no-web-resources-cdn --no-wasm-dry-run --dart-define=DEPLOY_MODE=${mode} --output="$output" 2>&1 | tee -a "$log_file"
+        flutter build web --release ${debug_args} --no-web-resources-cdn --no-wasm-dry-run --dart-define=DEPLOY_MODE=${mode} --output="$output" 2>&1 | tee -a "$log_file"
     else
-        flutter build web --release --no-wasm-dry-run --dart-define=DEPLOY_MODE=${mode} --output="$output" 2>&1 | tee -a "$log_file"
+        flutter build web --release ${debug_args} --no-wasm-dry-run --dart-define=DEPLOY_MODE=${mode} --output="$output" 2>&1 | tee -a "$log_file"
     fi
 
     # 生成部署模式配置文件，供 index.html 读取

@@ -28,7 +28,9 @@ final audioHandlerProvider = Provider<SongloftAudioHandler>((ref) {
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isWindows) {
+  // Web 上 dart:io 的 Platform 不可用，调用任意 getter 会抛 UnsupportedError，
+  // 必须用 kIsWeb 守卫后再访问 Platform.isWindows
+  if (!kIsWeb && Platform.isWindows) {
     await WindowsSingleInstance.ensureSingleInstance(
       args,
       "songloft_player_instance",
