@@ -1,7 +1,7 @@
 name: songloft_flutter
 description: Songloft - 跨平台音乐播放器
 publish_to: 'none'
-version: 2.0.3+1
+version: 2.1.0+1
 license: Apache-2.0
 
 environment:
