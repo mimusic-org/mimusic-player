@@ -205,8 +205,9 @@ class SongloftAudioHandler extends BaseAudioHandler with SeekHandler {
       final songUrl = UrlHelper.buildSongUrl(song.url!);
 
       debugPrint('[Player] SongloftAudioHandler: song url: $songUrl');
-      // Web 平台使用 AudioSource.uri,其他平台使用 LockCachingAudioSource 实现边播边缓存
-      if (kIsWeb) {
+      // Web 平台 / 电台直播流使用 AudioSource.uri（直播流无法缓存）,
+      // 其他平台普通歌曲使用 LockCachingAudioSource 实现边播边缓存
+      if (kIsWeb || song.isLive) {
         source = ja.AudioSource.uri(Uri.parse(songUrl));
       } else {
         source = ja.LockCachingAudioSource(Uri.parse(songUrl));
