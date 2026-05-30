@@ -8,8 +8,10 @@ import 'package:just_audio/just_audio.dart' as ja;
 import 'package:volume_controller/volume_controller.dart';
 
 import '../../../../core/audio/audio_service.dart';
+import '../../../../core/storage/app_preferences.dart';
 import '../../../../core/utils/platform_utils.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/storage/playback_state_storage.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../../../core/utils/url_helper.dart';
 import '../../../../main.dart';
@@ -46,11 +48,19 @@ class PlayerNotifier extends Notifier<PlayerState> {
   int? _preSelectedNextIndex; // 预选的下一首歌曲索引（随机模式使用）
 
   // 播放失败重试配置
-  static const int _maxRetryPerSong = 2; // N1: 单首歌曲最大重试次数
-  static const int _maxConsecutiveSkips = 3; // N2: 连续跳过失败上限
-  static const int _retryDelayMs = 1000; // 重试间隔（毫秒）
+  static const int _maxRetryPerSong = 2;
+  static const int _maxConsecutiveSkips = 3;
+  static const int _retryDelayMs = 1000;
 
-  int _consecutiveFailures = 0; // 连续跳过失败计数器
+  int _consecutiveFailures = 0;
+
+  // 播放状态持久化
+  Timer? _saveDebounceTimer;
+  Timer? _positionSaveTimer;
+  static const int _saveDebounceMs = 2000;
+  static const int _positionSaveIntervalSec = 10;
+  final PlaybackStateStorage _playbackStorage = PlaybackStateStorage();
+  int _savedPositionMs = 0;
 
   @override
   PlayerState build() {
@@ -71,6 +81,8 @@ class PlayerNotifier extends Notifier<PlayerState> {
       _sleepTimer?.cancel();
       _sleepTimerCountdown?.cancel();
       _prefetchCancelToken?.cancel('disposed');
+      _saveDebounceTimer?.cancel();
+      _positionSaveTimer?.cancel();
     });
 
     // 从本地存储加载音量和播放模式设置
@@ -106,10 +118,79 @@ class PlayerNotifier extends Notifier<PlayerState> {
         state = state.copyWith(volume: savedVolume.clamp(0.0, 100.0));
         await _audioHandler.setVolume(state.volume / 100);
       }
+      // 恢复播放队列
+      await _restorePlaybackState(prefs);
     } catch (e) {
       debugPrint('[Player] Failed to load preferences: $e');
       await _audioHandler.setVolume(state.volume / 100);
     }
+  }
+
+  Future<void> _restorePlaybackState(AppPreferences prefs) async {
+    try {
+      final savedQueue = await _playbackStorage.loadQueue();
+      if (savedQueue.isEmpty) return;
+
+      final savedIndex = prefs.getCurrentIndex();
+      final safeIndex = savedIndex.clamp(0, savedQueue.length - 1);
+      _savedPositionMs = prefs.getPositionMs();
+
+      state = state.copyWith(
+        playlist: savedQueue,
+        currentIndex: safeIndex,
+        currentSong: savedQueue[safeIndex],
+      );
+
+      debugPrint(
+        '[Player] Restored playback state: ${savedQueue.length} songs, '
+        'index=$safeIndex, position=${_savedPositionMs}ms',
+      );
+    } catch (e) {
+      debugPrint('[Player] Failed to restore playback state: $e');
+    }
+  }
+
+  void _savePlaybackState() {
+    _saveDebounceTimer?.cancel();
+    _saveDebounceTimer = Timer(
+      const Duration(milliseconds: _saveDebounceMs),
+      () async {
+        try {
+          final prefs = await ref.read(appPreferencesProvider.future);
+          if (state.playlist.isEmpty) {
+            await _playbackStorage.clear();
+            await prefs.clearPlaybackState();
+          } else {
+            await _playbackStorage.saveQueue(state.playlist);
+            await prefs.setCurrentIndex(state.currentIndex);
+            await prefs.setPositionMs(state.currentTime.inMilliseconds);
+          }
+        } catch (e) {
+          debugPrint('[Player] Failed to save playback state: $e');
+        }
+      },
+    );
+  }
+
+  void _startPositionSaveTimer() {
+    _positionSaveTimer?.cancel();
+    _positionSaveTimer = Timer.periodic(
+      const Duration(seconds: _positionSaveIntervalSec),
+      (_) async {
+        if (!state.isPlaying || state.currentIndex < 0) return;
+        try {
+          final prefs = await ref.read(appPreferencesProvider.future);
+          await prefs.setPositionMs(state.currentTime.inMilliseconds);
+        } catch (e) {
+          debugPrint('[Player] Failed to save position: $e');
+        }
+      },
+    );
+  }
+
+  void _stopPositionSaveTimer() {
+    _positionSaveTimer?.cancel();
+    _positionSaveTimer = null;
   }
 
   /// 初始化监听器
@@ -235,6 +316,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
         currentSong: song,
       );
       await _playCurrent();
+      _savePlaybackState();
     }
   }
 
@@ -269,6 +351,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
     );
 
     await _playCurrent();
+    _savePlaybackState();
   }
 
   /// 添加到当前播放列表
@@ -286,6 +369,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
     }
 
     state = state.copyWith(playlist: newPlaylist);
+    _savePlaybackState();
   }
 
   /// 将歌曲插入到播放列表的指定位置
@@ -305,6 +389,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
       playlist: newPlaylist,
       currentIndex: newCurrentIndex,
     );
+    _savePlaybackState();
   }
 
   /// 暂停/播放切换
@@ -509,6 +594,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
       currentSong: newSong,
       clearCurrentSong: newSong == null,
     );
+    _savePlaybackState();
   }
 
   /// 拖拽排序播放列表
@@ -539,6 +625,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
       playlist: newPlaylist,
       currentIndex: newCurrentIndex,
     );
+    _savePlaybackState();
   }
 
   /// 清空播放列表
@@ -551,6 +638,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
     _audioHandler.stop();
     _playedIndices.clear();
     _preSelectedNextIndex = null;
+    _stopPositionSaveTimer();
     state = state.copyWith(
       playlist: [],
       currentIndex: -1,
@@ -559,6 +647,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
       currentTime: Duration.zero,
       duration: Duration.zero,
     );
+    _savePlaybackState();
   }
 
   /// 通过歌单 ID 播放全部歌曲
@@ -704,6 +793,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
     // 仅当代次未变化时才执行 touchPlaylist，避免对错误的歌单更新时间
     if (_loadGeneration == generation) {
       ref.read(playlistNotifierProvider.notifier).touchPlaylist(playlistId);
+      _savePlaybackState();
     } else {
       debugPrint(
         '[Player] _loadRemainingSongsById: skip touchPlaylist'
@@ -850,6 +940,9 @@ class PlayerNotifier extends Notifier<PlayerState> {
         '[Player] _loadRemainingSongsByFilter: done,'
         ' loaded=${state.playlist.length}, total=$total',
       );
+      if (_loadGeneration == generation) {
+        _savePlaybackState();
+      }
     } catch (e, st) {
       debugPrint(
         '[Player] _loadRemainingSongsByFilter: failed at offset=$offset/$total'
@@ -931,6 +1024,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
     );
 
     await _playCurrent();
+    _savePlaybackState();
   }
 
   /// 播放当前歌曲（带自动重试）
@@ -977,6 +1071,15 @@ class PlayerNotifier extends Notifier<PlayerState> {
         // 播放成功 - 重置连续失败计数
         _consecutiveFailures = 0;
         state = state.copyWith(isRetrying: false);
+
+        // 恢复上次保存的播放进度
+        if (_savedPositionMs > 0) {
+          final pos = Duration(milliseconds: _savedPositionMs);
+          _savedPositionMs = 0;
+          await _audioHandler.seek(pos);
+        }
+
+        _startPositionSaveTimer();
 
         // 预选下一首并预加载
         _preSelectNextIndex();

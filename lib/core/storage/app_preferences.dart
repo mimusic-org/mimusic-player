@@ -11,6 +11,8 @@ class AppPreferences {
   static const _playlistViewModeKey = 'playlist_view_mode';
   static const _lastUsernameKey = 'last_username';
   static const _lastPasswordKey = 'last_password';
+  static const _currentIndexKey = 'player_current_index';
+  static const _positionMsKey = 'player_position_ms';
 
   final SharedPreferences _prefs;
 
@@ -143,6 +145,27 @@ class AppPreferences {
   /// 设置本地缓存大小上限（字节），0 表示不限制
   Future<bool> setLocalCacheMaxSize(int maxSize) {
     return _prefs.setInt(_localCacheMaxSizeKey, maxSize);
+  }
+
+  int getCurrentIndex() {
+    return _prefs.getInt(_currentIndexKey) ?? -1;
+  }
+
+  Future<bool> setCurrentIndex(int index) {
+    return _prefs.setInt(_currentIndexKey, index);
+  }
+
+  int getPositionMs() {
+    return _prefs.getInt(_positionMsKey) ?? 0;
+  }
+
+  Future<bool> setPositionMs(int ms) {
+    return _prefs.setInt(_positionMsKey, ms);
+  }
+
+  Future<void> clearPlaybackState() async {
+    await _prefs.remove(_currentIndexKey);
+    await _prefs.remove(_positionMsKey);
   }
 
   /// 清除所有偏好设置
